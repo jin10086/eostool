@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Transfer - WIN96 DAPP挖矿</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <link rel="stylesheet" href="https://win96.me/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://win96.me/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://win96.me/css/font.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,700">
+  <link rel="stylesheet" href="https://win96.me/css/black.min.css" id="theme-stylesheet">
+  <link rel="shortcut icon" href="https://win96.me/favicon.ico">
+  <!-- Tweaks for older IEs-->
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.5/css/rowReorder.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
+
+
+  <link rel="stylesheet" href="https://win96.me/css/site.min.css?v=kDmUTsG2IhFoJ23WNMYgECGfNpLh8kUHpHnnYgXjiyY" />
+
+</head>
+
+<body>
+  <header class="header">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid d-flex align-items-center justify-content-between">
+        <div class="navbar-header">
+          <!-- Navbar Header--><a href="/" class="navbar-brand">
+            <div class="brand-text brand-big visible text-uppercase"><strong
+                class="text-primary">WIN</strong><strong>96</strong></div>
+            <div class="brand-text brand-sm"><strong class="text-primary">W</strong><strong>9</strong></div>
+          </a>
+          <!-- Sidebar Toggle Btn-->
+          <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+        </div>
+        <div class="right-menu list-inline no-margin-bottom">
+          <div class="list-inline-item"><a target="_blank" href="https://win96.me/Helps/NewGuideForMining.pdf"
+              class="nav-link">新手指导</a></div>
+          <div class="list-inline-item"><a href="javascript:void(0);" data-toggle="modal"
+              data-target="#accountMoreOpenModal" class="nav-link">账号多开</a></div>
+          <div class="list-inline-item logout"> <a id="btnLogin" href="javascript:void(0);" class="nav-link">登入 <i
+                class="icon-user"></i></a><a id="btnLogout" href="javascript:void(0);" class="nav-link"
+              style="display:none;">登出 <i class="icon-logout"></i></a></div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div class="d-flex">
+    <div class="page-content" style="width: 100%;">
+      <!-- Page Header-->
+      <div class="page-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-7">
+              <h2 class="h5 no-margin-bottom">Transfer</h2>
+            </div>
+            <div class="col-5 text-right">
+              <span id='lbCPUAvailable'></span> <a href="javascript:void(0)" id="btnPlusRent" data-toggle="modal"
+                data-target="#plusCPUModal" style="font-size:12px;">+CPU</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Breadcrumb-->
+      <div class="container-fluid">
+      </div>
+      <section class="no-padding-top">
+        <div class="container-fluid">
+          <div class="row" id="accountPanel" style="display:none;">
+            <div class="col-sm-12">
+              <div class="block">
+                <div class="block-body">
+                  账户：<span id="lbUserName" class="text-primary"></span>
+                  余额：<span id="lbBalance" class="text-primary">0.0000</span> <span id="lbTokenBalance"
+                    class="text-primary"> </span>
+                  <span>变化：</span><span id="profitAndLoss" class="text-primary"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3></h3>
+          <div class="row">
+            <div class="col-sm-12 col-md-4">
+              <div class="block">
+                <div class="title"><strong class="d-block">Basic</strong></div>
+                <div class="block-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="txtContract">合约账号</label>
+                      <input type="text" class="form-control" id="txtContract" placeholder="输入合约账号" value="eosio.token">
+                      <small id="txtContractHelp" class="form-text text-muted">合约账号，12个字符以内。</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtAction">合约方法</label>
+                      <input type="text" class="form-control" id="txtAction" placeholder="输入合约方法" value="transfer">
+                      <small id="txtActionHelp" class="form-text text-muted">合约方法，默认transfer</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtRecipient">收款人</label>
+                      <input type="text" class="form-control" id="txtRecipient" placeholder="输入收款人账号" value="">
+                      <small id="txtRecipientHelp" class="form-text text-muted">收款人账号，12个字符以内。</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtQuantity">数量</label>
+                      <input type="text" class="form-control" id="txtQuantity" placeholder="输入数量" value="">
+                      <small id="txtQuantityHelp" class="form-text text-muted">数量，格式是"0.0000
+                        EOS"；EOS是代币符号。其他代币请填写相应的符号。</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtMemo">Memo</label>
+                      <input type="text" class="form-control" id="txtMemo" placeholder="（选填）" value="">
+                      <small id="txtMemoHelp" class="form-text text-muted">转账额外信息</small>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="block">
+                <div class="title"><strong class="d-block">Setup</strong></div>
+                <div class="block-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="txtHttpEndpoint">节点</label>
+                      <input type="text" class="form-control" id="txtHttpEndpoint"
+                        aria-describedby="txtHttpEndpointHelp" placeholder="输入节点" value="https://api.eosbeijing.one">
+                      <small id="txtHttpEndpointHelp" class="form-text text-muted">官方默认节点，可以使用一个更快的节点来挖</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtTimeup">定时</label>
+                      <input type="text" class="form-control" id="txtTimeup" placeholder="定时"
+                        value="2018-10-26 21:00:00">
+                      <small id="txtTimeupHelp" class="form-text text-muted">时间标准格式 yyyy-MM-dd
+                        HH:mm:ss，于这个时间之后脚本执行交易操作</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtTimeout">频率</label>
+                      <input type="text" class="form-control" id="txtTimeout" placeholder="Input txtTimeout"
+                        aria-describedby="txtTimeoutHelp" value="0">
+                      <small id="txtTimeoutHelp" class="form-text text-muted">频率，单位毫秒，默认5000毫秒</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="txtCPUUnder">CPU限制(%)</label>
+                      <input type="text" class="form-control" id="txtCPUUnder" aria-describedby="txtCPUUnderHelp"
+                        placeholder="输入边界" value="10">
+                      <small id="txtCPUUnderHelp"
+                        class="form-text text-muted">用户CPU资源不能地址低于%，低于此值时脚本会停止并等待，默认值0不作限制</small>
+                    </div>
+                    <div class="form-group">
+                      <h1 id="countDownPanel"></h1>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="block">
+                <div class="title"><strong>Monitor</strong></div>
+                <div class="block-body">
+                  <form>
+                    <div class="form-group">
+                      <textarea id="txtResults" class="form-control" style="height:365px; font-size:12px; "
+                        readonly="readonly"></textarea>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="block">
+                <div class="block-body">
+                  <button type="button" class="btn btn-success btn-sm" id="btnStart">开始</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btnStop" style="display:none">停止</button>
+                  <p class="form-text text-muted">
+                    EIDOS已经上线MXC抹茶交易所，通过邀请链接注册抹茶：<a
+                      href="https://www.mxc.ceo/auth/signup?inviteCode=1Sxw">https://www.mxc.ceo/auth/signup?inviteCode=1Sxw</a>
+                    我们会获得抹茶一小部分返佣（您不会有任何损失），这会鼓励我们持续免费提供矿机给大家。如需交流可添加微信：<a href="javascript:void(0);"
+                      data-toggle="modal" data-target="#coinWechatGroupModal">bicaishen01</a>。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <footer class="footer">
+        <div class="footer__block block no-margin-bottom">
+          <div class="container-fluid text-center">
+            <!-- Please do not remove the backlink to us unless you support us at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+            <p class="no-margin-bottom">2018 &copy; win96.me admin@win96.me </p>
+            <p class="no-margin-bottom">
+              <script type="text/javascript">
+                var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+                document.write(unescape("%3Cspan id='cnzz_stat_icon_1278168664'%3E%3C/span%3E%3Cscript src='" +
+                  cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1278168664' type='text/javascript'%3E%3C/script%3E"
+                  ));
+              </script>
+            </p>
+          </div>
+        </div>
+      </footer>
+      <div id="accountMoreOpenModal" tabindex="-1" role="dialog" aria-labelledby="accountMoreOpenModalLabel"
+        aria-hidden="true" class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"><strong id="accountMoreOpenModalLabel" class="modal-title">账号多开</strong>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                  aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-center">
+                <a href="https://b1.win96.me" target="_blank">账号1</a>
+                <a href="https://b2.win96.me" target="_blank">账号2</a>
+                <a href="https://b3.win96.me" target="_blank">账号3</a>
+                <a href="https://b4.win96.me" target="_blank">账号4</a>
+                <a href="https://b5.win96.me" target="_blank">账号5</a>
+              </p>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="wechatGroupModal" tabindex="-1" role="dialog" aria-labelledby="wechatGroupModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"><strong id="wechatGroupModalLabel" class="modal-title">社区客服</strong>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                  aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-center"><img src="https://win96.me/wechat.jpg" style="max-width:430px; width:100%" /></p>
+              <p class="text-center">
+                电报群：https://t.me/win96miner
+              </p>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="coinWechatGroupModal" tabindex="-1" role="dialog" aria-labelledby="coinWechatGroupModalLabel"
+        aria-hidden="true" class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"><strong id="coinWechatGroupModalLabel" class="modal-title">社区客服</strong>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                  aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-center"><img src="https://win96.me/coinWechat.jpg" style="max-width:430px; width:100%" />
+              </p>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="plusCPUModal" tabindex="-1" role="dialog" aria-labelledby="plusCPUModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"><strong id="plusCPUModalLabel" class="modal-title">+CPU</strong>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                  aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label>快速租赁 <span id="rentCPUAccount"></span></label>
+                </div>
+                <div class="form-group row">
+                  <div class="col-6 text-center">
+                    <input type="button" value="0.10EOS 1天" id="btnRentCPU1d01" class="btn btn-primary btn-sm">
+                  </div>
+                  <div class="col-6 text-center">
+                    <input type="button" value="0.50EOS 1天" id="btnRentCPU1d05" class="btn btn-primary btn-sm">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-6 text-center">
+                    <input type="button" value="1.00EOS 1天" id="btnRentCPU1d10" class="btn btn-primary btn-sm">
+                  </div>
+                  <div class="col-6 text-center">
+                    <input type="button" value="2.00EOS 1天" id="btnRentCPU1d20" class="btn btn-primary btn-sm">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              EOS Bank提供租赁服务
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="panelMaintenance" class="modal show">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">脚本正在维护</h4>
+            </div>
+            <div class="modal-body">
+              <p>Transfer脚本正在维护，请稍后再试&hellip;</p>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- JavaScript files-->
+  <script src="https://win96.me/vendor/jquery/jquery.min.js"></script>
+  <script src="https://win96.me/vendor/popper.js/umd/popper.min.js"> </script>
+  <script src="https://win96.me/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="https://win96.me/js/front.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+  <script src="https://win96.me/js/eos.16.0.9.min.js"></script>
+  <script src="https://win96.me/js/scatterjs-core.min.js"></script>
+  <script src="https://win96.me/js/scatterjs-plugin-eosjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+
+  <script src="https://win96.me/js/site.min.js?v=giLqRGybUCjWN6nMkRK2M6J8zmJcHSNINh6JsSc578g"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js">
+  </script>
+
+
+  <script src="./transfer.js?v=1"></script>
+
+
+</body>
+
+</html>
